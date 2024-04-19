@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" media="screen" href='main.css'>
+</head>
+<body>
+    <div id="intro-container">
+        <h2>Webrtc,no signaling</h2>
+    </div>
+    <div id="videos">
+        <video class="video-player" id="user-1" autoplay playsinline></video>
+        <video class="video-player" id="user-2" autoplay playsinline></video>
+    </div>
+
+    <div class = "step">
+      <button id = "create-offer">Ctreate Offer</button>
+    </div>
+    <label>SDP OFFER:</label>
+    <textarea id = 'offer-sdp' placeholder=''></textarea>
+
+    <div class = 'step'>
+        <button id = "create-answer">Create Answer</button>
+    </div>
+    <label>SDP Answer</label>
+    <textarea id="answer-sdp" placeholder=""></textarea>
+
+    <div class=" stdp">
+        <button id="add-answer">Add answer</button>
+    </div>
+
+
+</body>
+<script src="main.js"></script>
+</html>

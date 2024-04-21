@@ -1,6 +1,18 @@
 
-
-let peerConnection = new RTCPeerConnection();
+let conf = {
+    iceServers: [
+        {
+            urls: `stun:stun.l.google.com:19302`,
+            username: '',
+            credential: ''
+        }
+    ],
+    iceTransportPolicy: 'all',
+    bundlePolicy: 'max-bundle',
+    rtcpMuxPolicy: 'require',
+    sdpSemantics: 'unified-plan'
+};
+let peerConnection = new RTCPeerConnection(conf);
 let localStream;
 let remoteStream;
 
@@ -52,7 +64,7 @@ let onMessage = async(event) =>
    if(msg.type == "join")
    {
       console.log(event.data+" join room")
-      createOffer();
+    //   createOffer();
    }
    if(msg.type == "offer")
    {
@@ -63,6 +75,11 @@ let onMessage = async(event) =>
    {
       document.getElementById('answer-sdp').value = JSON.stringify(msg.text);            
       addAnswer();
+   }
+   if(msg.type == "ice")
+   {
+      peerConnection.addIceCandidate(msg.text);
+      console.log("add ICE candidate:"+msg.text.candidate);
    }
 }
 let sendMessage = async(message) =>{
@@ -80,7 +97,7 @@ let createOffer=async () =>{
         {
             document.getElementById('offer-sdp').value = JSON.stringify(peerConnection.localDescription);
 
-            sendMessage(JSON.stringify({type:"offer",text:peerConnection.localDescription}));
+            sendMessage(JSON.stringify({type:"ice",text:event.candidate}));
 
         }
     }
@@ -89,6 +106,7 @@ let createOffer=async () =>{
     let offer = await peerConnection.createOffer();
     console.log(offer);
     await peerConnection.setLocalDescription(offer);
+    sendMessage(JSON.stringify({type:"offer",text:peerConnection.localDescription}));
 
     document.getElementById('offer-sdp').value = JSON.stringify(peerConnection.localDescription);
 
@@ -101,7 +119,7 @@ let createAnswer = async() =>{
         {
             console.log('on ice')
             document.getElementById('answer-sdp').value = JSON.stringify(peerConnection.localDescription);
-            sendMessage(JSON.stringify({type:"answer",text:peerConnection.localDescription}));
+            sendMessage(JSON.stringify({type:"ice",text:event.candidate}));
         }
     }
 
@@ -111,6 +129,7 @@ let createAnswer = async() =>{
 
     let answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
+    sendMessage(JSON.stringify({type:"answer",text:peerConnection.localDescription}));
     console.log('set remoete sdp sucess');
 
     document.getElementById('answer-sdp').value = JSON.stringify(peerConnection.localDescription);

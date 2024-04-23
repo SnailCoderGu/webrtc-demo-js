@@ -3,6 +3,9 @@
 
 ![效果图](./效果图.png)
 
+视频讲解地址:
+https://space.bilibili.com/631609103
+
 
 # main
 
